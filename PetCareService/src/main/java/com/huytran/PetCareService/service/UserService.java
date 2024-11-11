@@ -1,9 +1,12 @@
 package com.huytran.PetCareService.service;
 
+import com.huytran.PetCareService.constant.PredefinedRole;
 import com.huytran.PetCareService.dto.request.UserCreationRequest;
 import com.huytran.PetCareService.dto.request.UserUpdateRequest;
 import com.huytran.PetCareService.dto.response.UserResponse;
+import com.huytran.PetCareService.entity.Role;
 import com.huytran.PetCareService.entity.User;
+import com.huytran.PetCareService.entity.UserRole;
 import com.huytran.PetCareService.exception.AppException;
 import com.huytran.PetCareService.exception.ErrorCode;
 import com.huytran.PetCareService.mapper.UserMapper;
@@ -20,7 +23,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 
 @Slf4j
 @Service
@@ -36,13 +41,29 @@ public class UserService {
         User user = userMapper.toUser(request);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
+        if (request.getDob() == null) {
+            user.setDob(LocalDate.now()); // Hoặc một giá trị mặc định khác
+        }
+
+        // Lấy vai trò "USER" từ RoleRepository
+        Role userRole = roleRepository.findByName(PredefinedRole.CUSTOMER_ROLE)
+                .orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_EXISTED));
+
+        // Tạo đối tượng UserRole và gán cho người dùng
+        UserRole userRoleEntity = UserRole.builder()
+                .user(user)
+                .role(userRole)
+                .build();
+
+        user.setUserRoles(Set.of(userRoleEntity));
+
         try {
             user = userRepository.save(user);
         } catch (DataIntegrityViolationException exception) {
             throw new AppException(ErrorCode.USER_EXISTED);
         }
 
-        return  userMapper.toUserResponse(user);
+        return userMapper.toUserResponse(user);
     }
 
     public UserResponse getMyInfo() {

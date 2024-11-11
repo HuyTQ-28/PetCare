@@ -3,6 +3,7 @@ package com.huytran.PetCareService.configuration;
 import com.huytran.PetCareService.constant.PredefinedRole;
 import com.huytran.PetCareService.entity.Role;
 import com.huytran.PetCareService.entity.User;
+import com.huytran.PetCareService.entity.UserRole;
 import com.huytran.PetCareService.repository.RoleRepository;
 import com.huytran.PetCareService.repository.UserRepository;
 import lombok.AccessLevel;
@@ -15,7 +16,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.util.HashSet;
+import java.time.LocalDate;
+import java.util.Set;
 
 @Configuration
 @RequiredArgsConstructor
@@ -36,10 +38,10 @@ public class ApplicationInitConfig {
     ApplicationRunner applicationRunner(UserRepository userRepository, RoleRepository roleRepository) {
         log.info("Initializing application.....");
         return args -> {
-            if (userRepository.findByUsername(ADMIN_USER_NAME).isEmpty()) {
+            if (userRepository.findByUsername(PredefinedRole.ADMIN_ROLE).isEmpty()) {
                 roleRepository.save(Role.builder()
                         .name(PredefinedRole.CUSTOMER_ROLE)
-                        .description("User role")
+                        .description("Customer role")
                         .build());
 
                 Role adminRole = roleRepository.save(Role.builder()
@@ -47,17 +49,24 @@ public class ApplicationInitConfig {
                         .description("Admin role")
                         .build());
 
-                var roles = new HashSet<Role>();
-                roles.add(adminRole);
-
                 User user = User.builder()
                         .username(ADMIN_USER_NAME)
                         .password(passwordEncoder.encode(ADMIN_PASSWORD))
-//                        .roles(roles)
+                        .firstName("Admin")
+                        .lastName("Admin")
+                        .dob(LocalDate.now())
                         .build();
 
+                // Tạo đối tượng UserRole và gán cho người dùng
+                UserRole userRole = UserRole.builder()
+                        .user(user)
+                        .role(adminRole)
+                        .build();
+
+                user.setUserRoles(Set.of(userRole));
+
                 userRepository.save(user);
-                log.warn("admin user has been created with default password: admin. Please change it");
+                log.warn("Admin user has been created with default password: admin. Please change it");
             }
             log.info("Application initialization completed .....");
         };

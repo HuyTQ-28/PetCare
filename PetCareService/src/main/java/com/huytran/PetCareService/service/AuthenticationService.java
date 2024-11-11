@@ -112,13 +112,13 @@ public class AuthenticationService {
         }
     }
 
-    private SignedJWT verifyToken(String token, boolean iaRefresh)
+    private SignedJWT verifyToken(String token, boolean isRefresh)
             throws ParseException, JOSEException {
         JWSVerifier verifier = new MACVerifier(SIGNER_KEY.getBytes());
 
         SignedJWT signedJWT = SignedJWT.parse(token);
 
-        Date expiryTime = (iaRefresh)
+        Date expiryTime = (isRefresh)
                 ? new Date(signedJWT
                     .getJWTClaimsSet()
                     .getIssueTime()
