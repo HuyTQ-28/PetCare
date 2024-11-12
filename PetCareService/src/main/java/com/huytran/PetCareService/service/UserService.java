@@ -26,6 +26,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -45,7 +46,7 @@ public class UserService {
             user.setDob(LocalDate.now()); // Hoặc một giá trị mặc định khác
         }
 
-        // Lấy vai trò "USER" từ RoleRepository
+        // Lấy vai trò "CUSTOMER" từ RoleRepository
         Role userRole = roleRepository.findByName(PredefinedRole.CUSTOMER_ROLE)
                 .orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_EXISTED));
 
@@ -83,6 +84,16 @@ public class UserService {
 
         userMapper.updateUser(user, request);
         user.setPassword(passwordEncoder.encode(request.getPassword()));
+
+        // Update roles
+        Set<UserRole> userRoles = request.getRoles().stream()
+                .map(roleName -> {
+                    Role role = roleRepository.findByName(roleName)
+                            .orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_EXISTED));
+                    return new UserRole(user, role);
+                })
+                .collect(Collectors.toSet());
+        user.setUserRoles(userRoles);
 
         return userMapper.toUserResponse(userRepository.save(user));
     }
