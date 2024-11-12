@@ -32,7 +32,8 @@ public class PermissionGroupPermissionService {
 
     public PermissionGroupPermissionResponse create(PermissionGroupPermissionRequest request) {
         PermissionGroupPermission permissionGroupPermission = permissionGroupPermissionMapper.toPermissionGroupPermission(request);
-        permissionGroupPermissionRepository.save(permissionGroupPermission);
+        log.info("Find {} {}", request.getPermissionGroupId(), request.getPermissionId());
+        permissionGroupPermission = permissionGroupPermissionRepository.save(permissionGroupPermission);
         return permissionGroupPermissionMapper.toPermissionGroupPermissionResponse(permissionGroupPermission);
     }
 

@@ -22,6 +22,7 @@ public enum ErrorCode {
     PERMISSION_GROUP_NOT_EXISTED(1011, "Permission group not existed", HttpStatus.NOT_FOUND),
     PERMISSION_GROUP_PERMISSION_NOT_EXISTED(1012, "Permission group permission not existed", HttpStatus.NOT_FOUND),
     ROLE_PERMISSION_GROUP_NOT_EXISTED(1013, "Role permission group not existed", HttpStatus.NOT_FOUND),
+    INVALID_INPUT(1014, "Permission group name cannot be null or empty", HttpStatus.BAD_REQUEST),
     ;
 
     ErrorCode(int code, String message, HttpStatusCode statusCode) {

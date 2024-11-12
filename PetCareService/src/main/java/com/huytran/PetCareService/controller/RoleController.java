@@ -34,7 +34,7 @@ public class RoleController {
                 .build();
     }
 
-    @PostMapping("/{roleId}")
+    @PutMapping("/{roleId}")
     ApiResponse<RoleResponse> update(@PathVariable Long roleId, @RequestBody RoleRequest request) {
         return ApiResponse.<RoleResponse>builder()
                 .result(roleService.updateRole(roleId, request.getName(), request.getDescription()))

@@ -38,21 +38,27 @@ public class PermissionGroupService {
                 .toList();
     }
 
-    public PermissionGroupResponse update(Long permissionGroupId, String name, String description) {
+    public PermissionGroupResponse updatePermissionGroup(Long permissionGroupId, PermissionGroupRequest request) {
+        if (request.getName() == null || request.getName().isEmpty()) {
+            throw new AppException(ErrorCode.INVALID_INPUT);
+        }
+        // Tìm Permission Group theo id
         Optional<PermissionGroup> optionalPermissionGroup = permissionGroupRepository.findById(permissionGroupId);
 
+        // Nếu không tìm thấy, throw exception
         if (optionalPermissionGroup.isEmpty()) {
             throw new AppException(ErrorCode.PERMISSION_GROUP_NOT_EXISTED);
         }
 
         PermissionGroup permissionGroup = optionalPermissionGroup.get();
 
-        permissionGroup.setName(name);
-        permissionGroup.setDescription(description);
+        // Cập nhật thông tin
+        permissionGroup.setName(request.getName());
+        permissionGroup.setDescription(request.getDescription());
 
-        permissionGroup = permissionGroupRepository.save(permissionGroup);
+        PermissionGroup updatedPermissionGroup = permissionGroupRepository.save(permissionGroup);
 
-        return permissionGroupMapper.toPermissionGroupResponse(permissionGroup);
+        return permissionGroupMapper.toPermissionGroupResponse(updatedPermissionGroup);
     }
 
     public void delete(Long permissionGroupId) {

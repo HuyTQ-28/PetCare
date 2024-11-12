@@ -14,7 +14,7 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping("/permission_group")
+@RequestMapping("/permission_groups")
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class PermissionGroupController {
@@ -34,10 +34,10 @@ public class PermissionGroupController {
                 .build();
     }
 
-    @PostMapping("/{permissionGroupId}")
+    @PutMapping("{permissionGroupId}")
     ApiResponse<PermissionGroupResponse> update(@PathVariable Long permissionGroupId, @RequestBody PermissionGroupRequest request) {
         return ApiResponse.<PermissionGroupResponse>builder()
-                .result(permissionGroupService.update(permissionGroupId, request.getName(), request.getDescription()))
+                .result(permissionGroupService.updatePermissionGroup(permissionGroupId, request))
                 .build();
     }
 

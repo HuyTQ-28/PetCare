@@ -13,5 +13,7 @@ import java.util.Set;
 public class PermissionGroupResponse {
     Long id;
     String name;
+    String description;
+
     Set<PermissionResponse> permissions;
 }
