@@ -18,10 +18,10 @@ public class PermissionGroupPermission {
     Long id;
 
     @ManyToOne
-    @JoinColumn(name = "permission_group_id")
+    @JoinColumn(name = "permission_group_id", nullable = false)
     PermissionGroup permissionGroup;
 
     @ManyToOne
-    @JoinColumn(name = "permission_id")
+    @JoinColumn(name = "permission_id", nullable = false)
     Permission permission;
 }

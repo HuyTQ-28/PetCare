@@ -28,11 +28,22 @@ public class PermissionGroupPermissionService {
     PermissionGroupPermissionRepository permissionGroupPermissionRepository;
     PermissionGroupPermissionMapper permissionGroupPermissionMapper;
     PermissionGroupRepository permissionGroupRepository;
-    private final PermissionRepository permissionRepository;
+    PermissionRepository permissionRepository;
 
     public PermissionGroupPermissionResponse create(PermissionGroupPermissionRequest request) {
-        PermissionGroupPermission permissionGroupPermission = permissionGroupPermissionMapper.toPermissionGroupPermission(request);
-        log.info("Find {} {}", request.getPermissionGroupId(), request.getPermissionId());
+        // Tìm Permission và PermissionGroup từ ID trong request
+        Permission permission = permissionRepository.findById(request.getPermissionId())
+                .orElseThrow(() -> new AppException(ErrorCode.PERMISSION_NOT_EXISTED));
+        PermissionGroup permissionGroup = permissionGroupRepository.findById(request.getPermissionGroupId())
+                .orElseThrow(() -> new AppException(ErrorCode.PERMISSION_GROUP_NOT_EXISTED));
+
+        // Khởi tạo PermissionGroupPermission và thiết lập các đối tượng liên quan
+        PermissionGroupPermission permissionGroupPermission = PermissionGroupPermission.builder()
+                .permission(permission)
+                .permissionGroup(permissionGroup)
+                .build();
+
+        // Lưu vào database
         permissionGroupPermission = permissionGroupPermissionRepository.save(permissionGroupPermission);
         return permissionGroupPermissionMapper.toPermissionGroupPermissionResponse(permissionGroupPermission);
     }

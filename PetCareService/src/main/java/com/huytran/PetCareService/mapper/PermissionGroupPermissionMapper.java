@@ -9,5 +9,11 @@ import org.mapstruct.Mapper;
 public interface PermissionGroupPermissionMapper {
     PermissionGroupPermission toPermissionGroupPermission(PermissionGroupPermissionRequest request);
 
-    PermissionGroupPermissionResponse toPermissionGroupPermissionResponse(PermissionGroupPermission permissionGroupPermission);
+    default PermissionGroupPermissionResponse toPermissionGroupPermissionResponse(PermissionGroupPermission permissionGroupPermission) {
+        return PermissionGroupPermissionResponse.builder()
+                .id(permissionGroupPermission.getId())
+                .permissionGroupId(permissionGroupPermission.getPermissionGroup().getId()) // ánh xạ permissionGroupId
+                .permissionId(permissionGroupPermission.getPermission().getId()) // ánh xạ permissionId
+                .build();
+    }
 }
