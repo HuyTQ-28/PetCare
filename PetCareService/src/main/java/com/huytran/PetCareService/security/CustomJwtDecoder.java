@@ -1,4 +1,4 @@
-package com.huytran.PetCareService.configuration;
+package com.huytran.PetCareService.security;
 
 import com.huytran.PetCareService.dto.request.IntrospectRequest;
 import com.huytran.PetCareService.service.AuthenticationService;
@@ -15,6 +15,7 @@ import javax.crypto.spec.SecretKeySpec;
 import java.text.ParseException;
 import java.util.Objects;
 
+// Decode token mà ta truyền vào
 @Component
 public class CustomJwtDecoder implements JwtDecoder {
     @Value("${jwt.signerKey}")
@@ -31,6 +32,7 @@ public class CustomJwtDecoder implements JwtDecoder {
     @Override
     public Jwt decode(String token) throws JwtException {
         try {
+            // check xem token còn hiệu lực không
             var response = authenticationService.instrospsect(
                     IntrospectRequest.builder().token(token).build());
 
@@ -41,12 +43,14 @@ public class CustomJwtDecoder implements JwtDecoder {
         }
 
         if (Objects.isNull(nimbusJwtDecoder)) {
+            // Tạo 1 secret key
             SecretKeySpec secretKeySpec = new SecretKeySpec(signerKey.getBytes(), "HS512");
             nimbusJwtDecoder = NimbusJwtDecoder
                     .withSecretKey(secretKeySpec)
                     .macAlgorithm(MacAlgorithm.HS512)
                     .build();
         }
+
         return nimbusJwtDecoder.decode(token);
     }
 }

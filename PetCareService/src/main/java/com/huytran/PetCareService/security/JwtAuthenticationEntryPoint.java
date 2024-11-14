@@ -1,4 +1,4 @@
-package com.huytran.PetCareService.configuration;
+package com.huytran.PetCareService.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.huytran.PetCareService.dto.response.ApiResponse;
@@ -11,7 +11,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 
 import java.io.IOException;
-
+// Bắt lỗi 401
 public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException)
@@ -27,7 +27,7 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
                 .build();
 
         ObjectMapper objectMapper = new ObjectMapper();
-
+        // Viết nội dung cần trả về
         response.getWriter().write(objectMapper.writeValueAsString(apiResponse));
         response.flushBuffer();
     }

@@ -23,7 +23,7 @@ import java.text.ParseException;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class AuthenticationController {
     AuthenticationService authenticationService;
-
+    // lấy token bằng cách truyền username và password
     @PostMapping("/token")
     ApiResponse<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request) {
         var result = authenticationService.authenticate(request);
@@ -31,7 +31,7 @@ public class AuthenticationController {
                 .result(result)
                 .build();
     }
-
+    // Xác thực xem token có hợp lệ hay không
     @PostMapping("/introspect")
     ApiResponse<IntrospectResponse> authenticate(@RequestBody IntrospectRequest request)
             throws ParseException, JOSEException {
@@ -40,7 +40,7 @@ public class AuthenticationController {
                 .result(result)
                 .build();
     }
-
+    // refresh token hợp lệ và còn hạn
     @PostMapping("/refresh")
     ApiResponse<AuthenticationResponse> authenticate(@RequestBody RefreshRequest request)
             throws ParseException, JOSEException {
@@ -49,7 +49,7 @@ public class AuthenticationController {
                 .result(result)
                 .build();
     }
-
+    // logout 1 token
     @PostMapping("/logout")
     ApiResponse<Void> logout(@RequestBody LogoutRequest request)
             throws ParseException, JOSEException {

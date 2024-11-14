@@ -1,7 +1,6 @@
 package com.huytran.PetCareService.entity;
 
 import java.time.LocalDate;
-import java.util.Set;
 
 import jakarta.persistence.*;
 
@@ -15,28 +14,25 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
-@Table(name = "app_user")
+@Table(name = "user")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "id", nullable = false, updatable = false)
+    @Column(name = "id")
     String id;
 
-    @Column(name = "username", unique = true, nullable = false, columnDefinition = "VARCHAR(255) COLLATE utf8m4_unicode_ci")
+    @Column(name = "username", unique = true, columnDefinition = "VARCHAR(255) COLLATE utf8m4_unicode_ci")
     String username;
 
-    @Column(name = "password", nullable = false)
+    @Column(name = "password")
     String password;
 
-    @Column(name = "first_name", nullable = false)
+    @Column(name = "first_name")
     String firstName;
 
-    @Column(name = "last_name", nullable = false)
+    @Column(name = "last_name")
     String lastName;
 
     @Column(name = "dob")
     LocalDate dob;
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    Set<UserRole> userRoles;
 }

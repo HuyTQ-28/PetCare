@@ -1,6 +1,5 @@
 package com.huytran.PetCareService.dto.request;
 
-import com.huytran.PetCareService.validator.DobConstraint;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.experimental.FieldDefaults;

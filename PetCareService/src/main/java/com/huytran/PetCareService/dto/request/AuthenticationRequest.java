@@ -12,3 +12,4 @@ public class AuthenticationRequest {
     String username;
     String password;
 }
+// Cung cấp thông tin về username & password để đăng nhập

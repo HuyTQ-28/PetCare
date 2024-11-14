@@ -17,9 +17,9 @@ import java.util.Date;
 @Entity
 public class InvalidatedToken {
     @Id
-    @Column(name = "id", nullable = false, updatable = false)
+    @Column(name = "id")
     String id;
 
-    @Column(name = "expiry_time", nullable = false)
+    @Column(name = "expiry_time")
     Date expiryTime;
 }

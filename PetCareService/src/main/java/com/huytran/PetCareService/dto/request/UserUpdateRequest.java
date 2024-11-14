@@ -1,11 +1,9 @@
 package com.huytran.PetCareService.dto.request;
 
-import com.huytran.PetCareService.validator.DobConstraint;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
-import java.util.List;
 
 
 @Data
@@ -19,5 +17,4 @@ public class UserUpdateRequest {
     String lastName;
 
     LocalDate dob;
-    List<String> roles;
 }
